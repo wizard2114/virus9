@@ -1,0 +1,5 @@
+install cmd :
+winget install --id Git.Git -e --source winget
+
+to access:
+git clone https://github.com/wizard2114/virus9.git
