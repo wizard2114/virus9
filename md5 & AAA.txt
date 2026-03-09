@@ -1,0 +1,69 @@
+MD 5:
+R1(config)# interface s0/0/0 
+R1(config-if)# ip ospf message-digest-key 1 md5 MD5pa55
+R1(config)# router ospf 1 
+R1(config-router)# area 0 authentication message-digest
+Repeat for all router
+
+NTP:
+R1(config)# ntp server 192.168.1.5 
+R1(config)# ntp update-calendar
+R1(config)# ntp authenticate 
+R1(config)# ntp trusted-key 1 
+R1(config)# ntp authentication-key 1 md5 NTPpa55 
+repeat for all router 
+ 
+syslog:
+R1(config)# service timestamps log datetime msec
+R1(config)# logging host 192.168.1.6 
+Use the command-show logging
+repeat for all router
+
+SSH:
+enable
+configure terminal
+
+hostname r1
+ip domain-name ccna.local
+
+crypto key generate rsa
+
+username admin secret cisco123
+
+line vty 0 4
+transport input ssh
+login local
+exit
+
+Telnet:
+enable
+configure terminal
+
+line vty 0 4
+password cisco
+login
+transport input telnet
+exit
+
+AAA:
+with telnet: do to router
+aaa new-model
+aaa authentication login default group tacacs+ local
+tacacs-server host 192.0.2.4 
+tacacs-server key tserver
+line vty 0 4
+login authentication default
+exit 
+
+with ssh:
+aaa new-model
+aaa authentication login default group tacacs+ local
+tacacs-server host 206.0.2.4
+tacacs-server key tserver
+line vty 0 4
+transport input ssh
+login authentication default
+exit 
+
+to config radius server replace tacacs+ with radius
+
